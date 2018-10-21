@@ -3,7 +3,7 @@
 In this article, I explain how you can:
 
 * Get the rental data by web scraping and converting it to Pandas data frame
-* Use the Geopandas library to convert maps in the form of [shapefile](https://en.wikipedia.org/wiki/Shapefile) to Geopandas data frames and Geojson maps 
+* Use the Geopandas library to convert maps  [shapefile](https://en.wikipedia.org/wiki/Shapefile) to Geopandas data frames and Geojson maps 
 * Make interactive Choropleth maps embedded with rental data
 
 
