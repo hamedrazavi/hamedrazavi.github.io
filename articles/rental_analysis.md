@@ -3,8 +3,30 @@
 In this article, I explain how you can:
 
 * Get the rental data by web scraping and converting it to Pandas data frame
+
 * Use the Geopandas library to convert maps  [shapefile](https://en.wikipedia.org/wiki/Shapefile) to Geopandas data frames and Geojson maps 
-* Make interactive Choropleth maps embedded with rental data
+
+* Make interactive Choropleth maps embedded with rental data, which looks like this (hover over the map to see average rent per room for each zip-code):
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.jsdelivr.net/npm/vega@4"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+</head>
+<body>  
+  <div id="vis" style="text-align:center"></div>
+  <script>
+    var spec = "https://raw.githubusercontent.com/hamedrazavi/rental_analysis_switzerland_immoscout24/master/data/lausanne_zip_rental.json";
+    var opt = {"actions": false,
+               "padding": {left: 5, top: 5, right: 5, bottom: 5}};
+  	vegaEmbed('#vis', spec, opt).catch(console.warn);
+  </script>
+</body>
+</html>
 
 
 
