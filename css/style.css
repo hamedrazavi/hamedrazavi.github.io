@@ -37,6 +37,13 @@
   margin: 5% 0 0 250px;
 }
 
+.articles_list a{
+  font-size: 25px;
+}
+.articles_list a:hover, a:link{
+  color: rgb(81, 91, 221);
+}
+
 #about_me {
   margin-top: 120px;
 }
