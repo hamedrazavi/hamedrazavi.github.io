@@ -3,12 +3,8 @@
 In this article, I explain how you can:
 
 * Get the rental data by web scraping and converting it to Pandas data frame
-
 * Use the Geopandas library to convert maps which are in  [shapefile](https://en.wikipedia.org/wiki/Shapefile) to Geopandas data frames and Geojson maps 
-
 * Make interactive Choropleth maps embedded with rental data, which looks like this (hover over the map to see average rent per room for each zip-code):
-
-
 
 <!DOCTYPE html>
 <html>
@@ -28,6 +24,7 @@ In this article, I explain how you can:
   </script>
 </body>
 </html>
+
 
 ## Web Scraping for rental data
 
@@ -75,7 +72,7 @@ This was the case for me when I wanted to study rental data in Switzerland. So, 
 
 5. Finally, I concatenate all single apartment data frames to a Pandas data frame which will be convenient for data analysis. 
 
-   I will be completing this article, but for the moment you can see the [this notebook](https://github.com/hamedrazavi/rental_analysis_switzerland_immoscout24/blob/master/src/rental_analysis_lausanne.ipynb) for the analysis and resulting Choropleth rental maps.  
+    
 
 ## Rental-Data analysis
 
@@ -83,7 +80,8 @@ Once you have the rental data in the form of a Pandas dataframe you can do the u
 
 
 
-<table border="1" class="dataframe">
+<div  style="overflow:auto;">
+<table border="1">
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -191,6 +189,8 @@ Once you have the rental data in the form of a Pandas dataframe you can do the u
     </tr>
   </tbody>
 </table>
+</div>
+
 
 
 
@@ -322,7 +322,8 @@ gdf = gdf.to_crs({'init': 'espg:4326'})
 
 Here is the first two elements of the geopandas dataframe ``gdf``: 
 
-<table border="1" class="dataframe">
+<div  style="overflow:auto;">
+<table border="1">
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -358,6 +359,8 @@ Here is the first two elements of the geopandas dataframe ``gdf``:
     </tr>
   </tbody>
 </table>
+</div>
+
 
 
 
@@ -426,12 +429,12 @@ Here is the result of the execution of the above code:
 	<script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
 </head>
 <body>  
-  <div id="vis" style="text-align:center"></div>
+  <div id="vis_no_text" style="text-align:center"></div>
   <script>
     var spec = "https://raw.githubusercontent.com/hamedrazavi/rental_analysis_switzerland_immoscout24/master/data/lausanne_zip_rental_no_text.json";
     var opt = {"actions": false,
                "padding": {left: 5, top: 5, right: 5, bottom: 5}};
-  	vegaEmbed('#vis', spec, opt).catch(console.warn);
+  	vegaEmbed('#vis_no_text', spec, opt).catch(console.warn);
   </script>
 </body>
 </html>
@@ -473,13 +476,15 @@ Here is the result. You can hover over the map to see the rent per room average 
 	<script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
 </head>
 <body>  
-  <div id="vis" style="text-align:center"></div>
+  <div id="vis_rent_per_room" style="text-align:center"></div>
   <script>
     var spec = "https://raw.githubusercontent.com/hamedrazavi/rental_analysis_switzerland_immoscout24/master/data/lausanne_zip_rental.json";
     var opt = {"actions": false,
                "padding": {left: 5, top: 5, right: 5, bottom: 5}};
-  	vegaEmbed('#vis', spec, opt).catch(console.warn);
+  	vegaEmbed('#vis_rent_per_room', spec, opt).catch(console.warn);
   </script>
 </body>
 </html>
+
+Head to [this notebook](https://github.com/hamedrazavi/rental_analysis_switzerland_immoscout24/blob/master/src/rental_analysis_lausanne.ipynb) for the python code that I summarized above. 
 
