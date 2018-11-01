@@ -377,7 +377,7 @@ gdf_laus.plot()
 
 Which would result in the following figure:
 
-![gdf_laus](/data/srazavi/working_on_myself/data_science/web_api/rental_analysis_switzerland/data/gdf_laus.jpg)
+![gdf_laus](https://raw.githubusercontent.com/hamedrazavi/rental_analysis_switzerland_immoscout24/master/data/gdf_laus.jpg)
 
 While ``geopandas`` can plot such minimal maps, I would like to have a Choropleth interactive map (where you can hover over the map see the rental results) that also looks a bit nicer than this one. To create such a map I decided to use the use the [Altair](https://github.com/hamedrazavi/altair_quick_tutorial) library. 
 
