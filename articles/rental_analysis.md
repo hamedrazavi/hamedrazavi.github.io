@@ -76,7 +76,7 @@ This was the case for me when I wanted to study rental data in Switzerland. So, 
 
 ## Rental-Data analysis
 
-Once you have the rental data in the form of a Pandas dataframe you can do the usual data analysis  pipeline. That is, you start by preprocessing the data (removing the missing data, handling outliers). For the data analysis, you can include new interesting features such as rent per room, rent per area, zip code of the apartments, etc. These are all done in [this notebook](https://github.com/hamedrazavi/rental_analysis_switzerland_immoscout24/blob/master/src/rental_analysis_lausanne.ipynb). Perhaps, the most tricky part of the data analysis pipeline for this example is removing the outliers (which are indeed mostly due to wrong inputs from the users). Here is the first 5 elements of the resulting dataframe:
+Once you have the rental data in the form of a Pandas dataframe you can do the usual data analysis  pipeline. That is, you start by preprocessing the data (handling the missing data, outliers, etc.). For the data analysis, you can include new interesting features such as rent per room, rent per area, zip code of the apartments, etc. These are all done in [this notebook](https://github.com/hamedrazavi/rental_analysis_switzerland_immoscout24/blob/master/src/rental_analysis_lausanne.ipynb). Perhaps, the most tricky part of the data analysis pipeline for this example is spotting and handling the outliers (which are indeed mostly due to wrong inputs from the users). Here is the first 5 elements of the resulting dataframe:
 
 
 
@@ -192,15 +192,13 @@ Once you have the rental data in the form of a Pandas dataframe you can do the u
 </div>
 
 
-
-
 Let's say you are interested in rental prices distribution as a function of zip-code. Then you could use the ``groupBy()`` method of Pandas on the above dataframe as follows:
 
 ```python
 zipVsRentMean = df[['ZipCode', 'RentPerArea', 'RentPerRoom', 'AreaPerRoom', 'SurfaceArea']].groupby(['ZipCode'], as_index = False).mean()
 ```
 
-to get this data frame:
+Here is ``zipVsRentMean``:
 
 <table border="1" class="dataframe">
   <thead>
@@ -305,7 +303,9 @@ For the moment, I will drop rows of zip code 1015  as I did not have enough data
 
 ## Read Shapefiles and convert them to Geopandas dataframes
 
-Next, we would like to show the results of the zip code table above on a map. To this end, we first should be able to read the maps. Maps are usually available in the shapefile format ``*.shp``. Let's first download this shapefile map for Lausanne, and then I discuss how you could read this in Python. First download the Switzerland's zip- code shapefiles from [Swiss opendata](https://opendata.swiss/en/dataset/amtliches-ortschaftenverzeichnis-mit-postleitzahl-und-perimeter). I have downloaded the PLZO_SHP_LV95 from [here](http://data.geo.admin.ch/ch.swisstopo-vd.ortschaftenverzeichnis_plz/PLZO_SHP_LV95.zip). Extract the folder, and note the address where you saved of the zip-code shapefile (called ``PLZO_PLZ.shp``) . I put it in my ``data`` folder. 
+Next, we would like to show the results of the zip code table above on a map. To this end, we first should be able to read the maps in Python. Maps are usually available in the shapefile format ``*.shp``. Let's first download this shapefile map, and then I discuss how you could read this in Python. 
+
+Download the Switzerland's zip- code shapefiles from [Swiss opendata](https://opendata.swiss/en/dataset/amtliches-ortschaftenverzeichnis-mit-postleitzahl-und-perimeter). I have downloaded the PLZO_SHP_LV95 from [here](http://data.geo.admin.ch/ch.swisstopo-vd.ortschaftenverzeichnis_plz/PLZO_SHP_LV95.zip). Extract the folder, and note the address where you saved the zip-code shapefile (called ``PLZO_PLZ.shp``) . I put it in my ``data`` folder. 
 
 Okay, now you have the shapefile. How would you read/manipulate this in Python? Luckily, the [Geopandas](http://geopandas.org/) library of Python, which is a powerful library used for geospatial data processing and analysis, has a method to convert shapefiles to geopandas dataframe:
 
@@ -362,9 +362,7 @@ Here is the first two elements of the geopandas dataframe ``gdf``:
 </div>
 
 
-
-
-The ``geometry`` column defines the shape of the polygon. Since we are only looking at the data in the city of Lausanne, I extract the data of Lausanne from ```gdf`` (which include the data of the whole Switzerland):
+The ``geometry`` column defines the shape of each polygon. Since we are only looking at the data in the city of Lausanne, I extract the data of Lausanne from ``gdf`` (note that ``gdf`` includes the data of the whole Switzerland):
 
 ```python
 lausanne = [1000, 1003, 1004, 1005, 1006, 1007, 1010, 1010, 1012, 1015, 1018]
@@ -381,9 +379,9 @@ Which would result in the following figure:
 
 ![gdf_laus](/data/srazavi/working_on_myself/data_science/web_api/rental_analysis_switzerland/data/gdf_laus.jpg)
 
-While ``geopandas`` can plot such minimal maps, I would like to have a Choropleth interactive map (where you can hover over the map see the rental results) and a bit nicer than this one. That is why I decided to use the use the [Altair](https://github.com/hamedrazavi/altair_quick_tutorial) library. 
+While ``geopandas`` can plot such minimal maps, I would like to have a Choropleth interactive map (where you can hover over the map see the rental results) that also looks a bit nicer than this one. To create such a map I decided to use the use the [Altair](https://github.com/hamedrazavi/altair_quick_tutorial) library. 
 
-## Interactive Choropleth map embedded with rental data
+## Create interactive Choropleth map embedded with rental data
 
 First off, let's merge the ``gdf_laus`` dataframe which only contains geographical data with ``zipVsRentMean`` Pandas dataframe which included the rental data for each zip-code in Lausanne:
 
@@ -391,7 +389,7 @@ First off, let's merge the ``gdf_laus`` dataframe which only contains geographic
 gdf_laus = gdf_laus.merge(zipVsRentMean, left_on='PLZ', right_on='ZipCode')
 ```
 
-This will simply add columns of ``zipVsRentMean`` to the right of ``gdf_laus``. Okay, now we have a geopandas dataframe ``gdf_laus``, which includes both rental data and geographical information of Lausanne. Next, we want to visualize this on an interactive Choropleth map for which I use the Altair library. 
+This will simply add the columns of ``zipVsRentMean`` to the right of ``gdf_laus``. Okay, now we have a geopandas dataframe ``gdf_laus``, which includes both rental data and geographical information of Lausanne. Next, we want to visualize this on an interactive Choropleth map for which I use the Altair library. 
 
 In order for the ``gdf_laus`` data to be readable by the Altair library, we need to do some preprocessing as follows:
 
@@ -402,7 +400,7 @@ json_laus = json.loads(gdf_laus.to_json())
 alt_laus = alt.Data(values = json_laus['features'])
 ```
 
-``alt_laus`` has the data form which is easily readable by Altair as follows:
+``alt_laus`` has the data form which is readable by Altair as follows:
 
 ```Python
 alt_rentPerRoom = alt.Chart(alt_laus).mark_geoshape(
@@ -418,7 +416,7 @@ alt_rentPerRoom = alt.Chart(alt_laus).mark_geoshape(
 alt_rentPerRoom # to display the map
 ```
 
-Here is the result of the execution of the above code:
+Here is the result of the execution of this code:
 
 <!DOCTYPE html>
 <html>
