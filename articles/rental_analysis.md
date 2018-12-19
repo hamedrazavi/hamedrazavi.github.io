@@ -68,9 +68,26 @@ This was the case for me when I wanted to study rental data in Switzerland. So, 
    Bookmark
    ```
 
-4. Then I use ``regex`` in [this script](https://github.com/hamedrazavi/rental_analysis_switzerland_immoscout24/blob/master/src/SingleAptListing_to_table.py) to extract the information such as number of rooms, area, etc. from the string above and convert it to Pandas dataframe. This step is a bit tricky as not all single apartment listings look as nice as the one above. So the script has to cover all different cases without outputing wrong data. 
+4. Then I use ``regex`` in [this script](https://github.com/hamedrazavi/rental_analysis_switzerland_immoscout24/blob/master/src/SingleApt.py) to extract the information such as number of rooms, area, etc. from the string above and convert it to Pandas dataframe. This step is a bit tricky as not all single apartment listings look as nice as the one above. So the script has to cover all different cases without outputing wrong data. 
 
 5. Finally, I concatenate all single apartment data frames to a Pandas data frame which will be convenient for data analysis. 
+
+   All these steps are integrated into a class `ImmoScout` which can be used as follows:
+
+   ```python
+   from ImmoScout import ImmoScout
+   import pandas as pd
+   
+   # instantiate the ImmoScout class by setting the city name and listing type
+   lausanne = ImmoScout(city_name = 'lausanne', list_type = 'rent')
+   
+   # if some data is already downloaded set 'in_path' to the already saved csv file,
+   # otherwise just set the output path, i.e., out_path to save the converted data
+   lausanne.to_csv(in_path = '', out_path='../data/lausanne.csv')
+   
+   # convert the csv to pandas data frame
+   df = pd.read_csv('../data/lausanne.csv')
+   ```
 
     
 
